@@ -6,17 +6,17 @@ var AssetHelper = require('../lib/asset-helper.js'),
 describe('asset-helper', function() {
   it('should not accept appendHash flag without a baseDirectory', function() {
     try {
-      var assetHelper = new AssetHelper({
+      new AssetHelper({
         appendHash: true
       });
-    } catch(e) {
+    } catch (e) {
       return;
     }
 
     throw new Error('It should not be possible to call the constructor with these arguments');
   });
 
-  describe('path', function () {
+  describe('path', function() {
     it('should return the full path to the media asset', function() {
       var assetHelper = new AssetHelper({
         baseUrl: 'https://media.receiptful.com/'
