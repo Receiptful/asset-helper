@@ -1,6 +1,6 @@
 {
   "name": "asset-helper",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "NodeJs Asset Helper",
   "main": "lib/asset-helper.js",
   "scripts": {
