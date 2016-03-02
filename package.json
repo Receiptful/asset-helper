@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/Receiptful/asset-helper",
   "devDependencies": {
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.3"
   },
   "dependencies": {
     "lodash": "^3.10.1",
