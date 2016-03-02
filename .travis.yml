@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- '0.10'
+- '0.12'
+- '5'
+- '4'
+deploy:
+  provider: npm
+  email:
+    secure: DnMaKsk9O/BDxzGrN5CUrjt6fWDpLLBdxemEful1VnFczL9OhdZiX/U6NyvSMISGzSIeG6+26T9WT0V7V9E4wC+SQlkaW7nSLbcmaNiCdyxwoAcyzpJfbWGIDJOT0Cit0j1gaQqqk8Tp5aAp57CNpogO0MBLsk0X+cgLM6fZnZU=
+  api_key:
+    secure: mJKlD+ZBUYsY1eW2H92wXgbdJVKl825fsIr4Iwv7+rO4NKk39vOEi15LCeiGiWXRNPim6ip/w3ypYSV98NxwtlgYmMVinpGh/S5G+eJWcPCv1NCgSy6DM6k6SRhtsaetGpoHiCLEBlFs+4kEGtZInQdd2cteYVxDs6Rhb7kpYgM=
+  on:
+    tags: true
+    repo: Receiptful/asset-helper
+notifications:
+  slack:
+    secure: FePMmz7Z2X5wmyeAiULW57BtrjkS075JFNMNCSwLM8h7vFAMjOGpr/NIxVpr2PitQj9tH9RjQ9tYl+uRR9fHaChN0MX/V0b88KbvRMsHSzCAFNyiLS3Gz2IjbQmcFNiJajIcjiNONs1kEqo+mlGvJHCvi7VwZM/fERYZ8+Yt6wU=

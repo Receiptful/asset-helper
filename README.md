@@ -1,5 +1,7 @@
 # Asset Helper
 
+[![Build Status](https://travis-ci.org/Receiptful/asset-helper.svg?branch=master)](https://travis-ci.org/Receiptful/asset-helper)
+
 A simple and easy to use module to manage asset path and versions.
 
 ## Installation
