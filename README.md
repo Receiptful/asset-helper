@@ -35,6 +35,10 @@ const assetHelperWithHash = new AssetHelper({
   appendHash: true
 });
 console.log(assetHelperWithHash.path('style/main.css'));
+
+// You can override configuration params on individual calls:
+// Will output /style/main.css
+console.log(assetHelperWithHash.path('style/main.css', { appendHash: false }));
 ```
 
 ## Configuration options

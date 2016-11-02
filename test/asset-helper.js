@@ -13,15 +13,13 @@ describe('asset-helper', () => {
   afterEach(() => sandbox.restore());
 
   it('should not accept appendHash flag without a baseDirectory', () => {
-    try {
+    const block = () => {
       new AssetHelper({
         appendHash: true
       });
-    } catch (e) {
-      return;
-    }
+    };
 
-    throw new Error('It should not be possible to call the constructor with these arguments');
+    assert.throws(block);
   });
 
   it('should set a default configuration', () => {
@@ -34,10 +32,11 @@ describe('asset-helper', () => {
   describe('path', () => {
     it('should return the full path to the media asset', () => {
       const assetHelper = new AssetHelper({
-        baseUrl: 'https://media.receiptful.com/'
+        baseUrl: 'https://media.example.com/'
       });
 
-      assert.equal('https://media.receiptful.com/fixtures/file', assetHelper.path('fixtures/file'));
+      const path = assetHelper.path('fixtures/file')
+      assert.equal(path, 'https://media.example.com/fixtures/file');
     });
 
     it('should append the md5 hash as querystring', () => {
@@ -46,7 +45,8 @@ describe('asset-helper', () => {
         appendHash: true
       });
 
-      assert.equal('fixtures/file?v=ed797865eeb815b19a9e87746109c7c3', assetHelper.path('fixtures/file'));
+      const path = assetHelper.path('fixtures/file')
+      assert.equal(path, 'fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
     });
 
     it('should append the md5 hash as querystring with a full path', () => {
@@ -56,14 +56,15 @@ describe('asset-helper', () => {
         appendHash: true
       });
 
-      assert.equal('https://media.example.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3', assetHelper.path('fixtures/file'));
+      const path = assetHelper.path('fixtures/file');
+      assert.equal(path, 'https://media.example.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
     });
 
     it('should not read the file contents if the hash is cached', () => {
       const fsSpy = sandbox.spy(fs, 'readFileSync');
 
       const assetHelper = new AssetHelper({
-        baseUrl: 'https://media.receiptful.com/',
+        baseUrl: 'https://media.example.com/',
         baseDirectory: __dirname + '/',
         appendHash: true
       });
@@ -71,6 +72,53 @@ describe('asset-helper', () => {
       assetHelper.path('fixtures/file2');
       assetHelper.path('fixtures/file2');
       sinon.assert.calledOnce(fsSpy);
+    });
+
+    context('given extra path options', () => {
+      it('should allow disable appendHash', () => {
+        const assetHelper = new AssetHelper({
+          baseUrl: 'https://media.example.com/',
+          baseDirectory: __dirname + '/',
+          appendHash: true
+        });
+
+        // Test with options
+        let path = assetHelper.path('fixtures/file', { appendHash: false });
+        assert.equal(path, 'https://media.example.com/fixtures/file');
+
+        // Test the opposite (without options)
+        path = assetHelper.path('fixtures/file');
+        assert.equal(path, 'https://media.example.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
+      });
+
+      it('should allow enabling appendHash', () => {
+        const assetHelper = new AssetHelper({
+          baseUrl: 'https://media.example.com/',
+          baseDirectory: __dirname + '/',
+          appendHash: false
+        });
+
+        // Test with options
+        let path = assetHelper.path('fixtures/file', { appendHash: true });
+        assert.equal(path, 'https://media.example.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
+
+        // Test the opposite (without options)
+        path = assetHelper.path('fixtures/file');
+        assert.equal(path, 'https://media.example.com/fixtures/file');
+      });
+
+      it('should not accept enabling appendHash if baseDirectory is missing', () => {
+        const assetHelper = new AssetHelper({
+          baseUrl: 'https://media.example.com/',
+          appendHash: false
+        });
+
+        const block = () => {
+          assetHelper.path('fixtures/file', { appendHash: true });
+        };
+
+        assert.throws(block);
+      });
     });
   });
 });
