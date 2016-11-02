@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-- '0.10'
-- '0.12'
-- '5'
+- '7'
+- '6'
 - '4'
 deploy:
   provider: npm
@@ -15,4 +14,4 @@ deploy:
     repo: Receiptful/asset-helper
 notifications:
   slack:
-    secure: FePMmz7Z2X5wmyeAiULW57BtrjkS075JFNMNCSwLM8h7vFAMjOGpr/NIxVpr2PitQj9tH9RjQ9tYl+uRR9fHaChN0MX/V0b88KbvRMsHSzCAFNyiLS3Gz2IjbQmcFNiJajIcjiNONs1kEqo+mlGvJHCvi7VwZM/fERYZ8+Yt6wU=
+    secure: ZMYdPlp/Xk52+n5o/qG/3RYIw6An4fLsIdef9xkOt93BvZO3zxKjTX9Rl/Bs/F1OIzqpc0yiPcSPDAembC4IDkxOuD5HQEMLaEKCE57rT0OVW2y4NDA1bGoBluBCeHfCUvBY+IGN2jmwMt5bA35nB8mIipTOtDlbvxrnq6N3qpw=

@@ -1,64 +1,70 @@
 'use strict';
 
-var AssetHelper = require('../lib/asset-helper.js'),
+const AssetHelper = require('../lib/asset-helper.js'),
   assert = require('assert'),
   sinon = require('sinon'),
   fs = require('fs');
 
-describe('asset-helper', function() {
+describe('asset-helper', () => {
 
-  var sandbox;
-  beforeEach(function() {
-    sandbox = sinon.sandbox.create();
-  });
+  let sandbox;
+  beforeEach(() => sandbox = sinon.sandbox.create());
 
-  afterEach(function() {
-    sandbox.restore();
-  });
+  afterEach(() => sandbox.restore());
 
-  it('should not accept appendHash flag without a baseDirectory', function() {
-    try {
+  it('should not accept appendHash flag without a baseDirectory', () => {
+    const block = () => {
       new AssetHelper({
         appendHash: true
       });
-    } catch (e) {
-      return;
-    }
+    };
 
-    throw new Error('It should not be possible to call the constructor with these arguments');
+    assert.throws(block);
   });
 
-  describe('path', function() {
-    it('should return the full path to the media asset', function() {
-      var assetHelper = new AssetHelper({
-        baseUrl: 'https://media.receiptful.com/'
+  it('should set a default configuration', () => {
+    const assetHelper = new AssetHelper();
+    assert.equal(assetHelper.config.appendHash, false);
+    assert.equal(assetHelper.config.baseUrl, null);
+    assert.equal(assetHelper.config.baseDirectory, null);
+  });
+
+  describe('path', () => {
+    it('should return the full path to the media asset', () => {
+      const assetHelper = new AssetHelper({
+        baseUrl: 'https://media.example.com/'
       });
 
-      assert.equal('https://media.receiptful.com/fixtures/file', assetHelper.path('fixtures/file'));
+      const path = assetHelper.path('fixtures/file')
+      assert.equal(path, 'https://media.example.com/fixtures/file');
     });
-    it('should append the md5 hash as querystring', function() {
-      var assetHelper = new AssetHelper({
+
+    it('should append the md5 hash as querystring', () => {
+      const assetHelper = new AssetHelper({
         baseDirectory: __dirname + '/',
         appendHash: true
       });
 
-      assert.equal('fixtures/file?v=ed797865eeb815b19a9e87746109c7c3', assetHelper.path('fixtures/file'));
+      const path = assetHelper.path('fixtures/file')
+      assert.equal(path, 'fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
     });
-    it('should append the md5 hash as querystring with a full path', function() {
-      var assetHelper = new AssetHelper({
-        baseUrl: 'https://media.receiptful.com/',
+
+    it('should append the md5 hash as querystring with a full path', () => {
+      const assetHelper = new AssetHelper({
+        baseUrl: 'https://media.example.com/',
         baseDirectory: __dirname + '/',
         appendHash: true
       });
 
-      assert.equal('https://media.receiptful.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3', assetHelper.path('fixtures/file'));
+      const path = assetHelper.path('fixtures/file');
+      assert.equal(path, 'https://media.example.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
     });
 
-    it('should not read the file contents if the hash is cached', function() {
-      var fsSpy = sandbox.spy(fs, 'readFileSync');
+    it('should not read the file contents if the hash is cached', () => {
+      const fsSpy = sandbox.spy(fs, 'readFileSync');
 
-      var assetHelper = new AssetHelper({
-        baseUrl: 'https://media.receiptful.com/',
+      const assetHelper = new AssetHelper({
+        baseUrl: 'https://media.example.com/',
         baseDirectory: __dirname + '/',
         appendHash: true
       });
@@ -66,6 +72,53 @@ describe('asset-helper', function() {
       assetHelper.path('fixtures/file2');
       assetHelper.path('fixtures/file2');
       sinon.assert.calledOnce(fsSpy);
+    });
+
+    context('given extra path options', () => {
+      it('should allow disable appendHash', () => {
+        const assetHelper = new AssetHelper({
+          baseUrl: 'https://media.example.com/',
+          baseDirectory: __dirname + '/',
+          appendHash: true
+        });
+
+        // Test with options
+        let path = assetHelper.path('fixtures/file', { appendHash: false });
+        assert.equal(path, 'https://media.example.com/fixtures/file');
+
+        // Test the opposite (without options)
+        path = assetHelper.path('fixtures/file');
+        assert.equal(path, 'https://media.example.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
+      });
+
+      it('should allow enabling appendHash', () => {
+        const assetHelper = new AssetHelper({
+          baseUrl: 'https://media.example.com/',
+          baseDirectory: __dirname + '/',
+          appendHash: false
+        });
+
+        // Test with options
+        let path = assetHelper.path('fixtures/file', { appendHash: true });
+        assert.equal(path, 'https://media.example.com/fixtures/file?v=ed797865eeb815b19a9e87746109c7c3');
+
+        // Test the opposite (without options)
+        path = assetHelper.path('fixtures/file');
+        assert.equal(path, 'https://media.example.com/fixtures/file');
+      });
+
+      it('should not accept enabling appendHash if baseDirectory is missing', () => {
+        const assetHelper = new AssetHelper({
+          baseUrl: 'https://media.example.com/',
+          appendHash: false
+        });
+
+        const block = () => {
+          assetHelper.path('fixtures/file', { appendHash: true });
+        };
+
+        assert.throws(block);
+      });
     });
   });
 });
