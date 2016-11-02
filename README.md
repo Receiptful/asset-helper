@@ -10,25 +10,31 @@ Install the module through NPM:
 
     $ npm install asset-helper --save
 
+**Requires Node 4 or above**
+
 ## Examples
 
 Include the module and create a new `AssetHelper` object:
 
 ```javascript
-var AssetHelper = require('asset-helper');
+const AssetHelper = require('asset-helper');
 
-var assetHelper = new AssetHelper();
-console.log(assetHelper.path('style/main.css')); // Will output style/main.css
+// Will output style/main.css
+const assetHelper = new AssetHelper();
+console.log(assetHelper.path('style/main.css')); 
 
-var assetHelperWithBaseUrl = new AssetHelper({
+// Will output http://www.foo.com/style/main.css
+const assetHelperWithBaseUrl = new AssetHelper({
   baseUrl: 'http://www.foo.com/'
 });
-console.log(assetHelperWithBaseUrl.path('style/main.css')); // Will output http://www.foo.com/style/main.css
+console.log(assetHelperWithBaseUrl.path('style/main.css')); 
 
-var assetHelperWithHash = new AssetHelper({
-  baseDirectory: __dirname + '/../public/'
+// Will output /style/main.css?v=3094302hdhsd9fu9023
+const assetHelperWithHash = new AssetHelper({
+  baseDirectory: __dirname + '/../public/',
+  appendHash: true
 });
-console.log(assetHelperWithHash.path('style/main.css')); // Will output /style/main.css?v=3094302hdhsd9fu9023
+console.log(assetHelperWithHash.path('style/main.css'));
 ```
 
 ## Configuration options
